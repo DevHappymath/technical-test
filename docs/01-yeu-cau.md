@@ -236,39 +236,6 @@ Hệ thống cần thực thi các quy tắc sau. Làm được tới đâu ghi 
 - Rõ nghĩa: `"Số người tham gia (45) vượt quá sức chứa của phòng (30)"`
 - Rõ nghĩa: `"Chỉ được hủy trước giờ bắt đầu ít nhất 2 tiếng"`
 
-### 2.4. Câu hỏi phân tích
-
-Trả lời trong `SOLUTION.md`. **Chỉ cần trả lời bằng lời, không cần code.**
-
-**a) Tình huống tranh chấp**
-
-Hai giáo viên cùng bấm nút đặt **phòng A101, 09:00-11:00 ngày mai** vào đúng **cùng một thời điểm**. Hai request chạy song song trên server.
-
-Giả sử code kiểm tra trùng lịch (R6) của bạn viết theo trình tự tự nhiên nhất:
-
-```
-1. Query database: khoảng thời gian này đã có ai đặt chưa?
-2. Không có ai → tạo bản ghi mới
-3. Lưu xuống database
-```
-
-1. Điều gì xảy ra nếu **cả hai request cùng chạy tới bước 1 trước khi bất kỳ request nào chạy tới bước 3**? Mô tả kết quả cuối cùng trong database.
-2. Vì sao lỗi này **rất khó phát hiện** khi bạn test thủ công một mình?
-3. Nêu **ít nhất một cách** để ngăn chặn, và giải thích cách đó hoạt động ra sao.
-   *Gợi ý hướng tìm hiểu: ràng buộc unique ở tầng database, transaction, khóa bi quan / khóa lạc quan.*
-
-> [!NOTE]
-> **Không cần triển khai** cách bạn nêu ở ý 3. Chúng tôi chấm khả năng **nhận ra** vấn đề — đây là kỹ năng quan trọng hơn nhiều so với việc biết sẵn cách sửa.
-
-**b) Vấn đề truy vấn**
-
-API "Danh sách tất cả yêu cầu" hiển thị kèm **mã phòng và tên phòng** của mỗi yêu cầu. Một trang có 20 yêu cầu.
-
-1. Code của bạn thực tế bắn xuống database **bao nhiêu câu query** để lấy đủ dữ liệu cho trang đó?
-2. Nếu con số đó là 21 (1 query lấy danh sách + 20 query lấy tên phòng) thì vấn đề này tên là gì, và khắc phục thế nào?
-
----
-
 ## Câu 3 — Tích hợp SSO với AuthService
 
 **Trọng số: 20 điểm**
