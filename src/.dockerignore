@@ -1,0 +1,26 @@
+## Build output — phải loại, nếu không sẽ ghi đè kết quả build trong image
+**/bin/
+**/obj/
+
+## Git & IDE
+.git/
+.gitignore
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+
+## Secrets — KHÔNG được lọt vào image layer
+**/appsettings.*.local.json
+**/*.pfx
+**/*.key
+**/.env
+**/.env.*
+tokens.txt
+
+## Khác
+Dockerfile
+.dockerignore
+docker-compose.yml
+**/*.md

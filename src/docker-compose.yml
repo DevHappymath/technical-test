@@ -1,0 +1,43 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: booking-test-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: booking_test
+    ports:
+      # Map ra cổng 5433 để không đụng PostgreSQL đang chạy sẵn trên máy (nếu có).
+      # Chỉ bind vào localhost — database dev dùng mật khẩu mặc định, không nên
+      # mở ra toàn mạng LAN.
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - booking_test_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d booking_test"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # Chạy API trong container. Không bật mặc định — `docker compose up -d` vẫn
+  # chỉ dựng database để bạn `dotnet run` ở ngoài cho dễ debug.
+  # Muốn chạy cả API:  docker compose --profile app up -d --build
+  api:
+    profiles: ["app"]
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: booking-test-api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=booking_test;Username=postgres;Password=postgres"
+    ports:
+      - "127.0.0.1:5080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  booking_test_data:

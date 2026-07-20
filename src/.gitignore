@@ -1,0 +1,25 @@
+## .NET build output
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+*.user
+*.suo
+
+## IDE
+.vs/
+.vscode/
+.idea/
+*.swp
+
+## Secrets — KHÔNG commit
+appsettings.*.local.json
+*.pfx
+*.key
+.env
+.env.local
+tokens.txt
+
+## OS
+.DS_Store
+Thumbs.db
