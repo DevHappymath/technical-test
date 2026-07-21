@@ -311,53 +311,6 @@ Cấu hình service của bạn để bảo vệ API bằng token từ AuthServi
 | 6 | Tạo endpoint `GET /api/me` trả về thông tin người dùng đang đăng nhập (userId, email, roles, permissions) |
 | 7 | Gọi API **không kèm token** → trả **401**; kèm token hợp lệ nhưng **thiếu quyền** → trả **403**. Cả hai đều trả về JSON đúng format chung, **không** trả HTML |
 
-### 3.3. Phần phân tích — Rà soát cấu hình
-
-Một lập trình viên khác trong team đã viết đoạn cấu hình xác thực dưới đây và gửi bạn review. Đoạn code này **biên dịch được và chạy được**, nhưng chứa **nhiều lỗi bảo mật nghiêm trọng**.
-
-```csharp
-// ⚠️ ĐOẠN CODE NÀY CỐ TÌNH SAI — dùng để rà soát, đừng copy vào bài làm
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.Authority = "https://auth-sandbox.netlify.app/";
-        options.RequireHttpsMetadata = false;
-
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = false,
-            ValidateAudience = false,
-            ValidateIssuerSigningKey = false,
-            ValidateLifetime = false,
-
-            SignatureValidator = (token, parameters) => new JwtSecurityToken(token)
-        };
-    });
-```
-
-Và đây là cách người đó lấy thông tin người dùng trong service:
-
-```csharp
-public Guid GetCurrentUserId()
-{
-    var token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"]
-        .ToString().Replace("Bearer ", "");
-
-    var jwt = new JwtSecurityToken(token);
-    var sub = jwt.Claims.First(c => c.Type == "sub").Value;
-
-    return Guid.Parse(sub);
-}
-```
-
-**Yêu cầu — trả lời trong `SOLUTION.md`:**
-
-1. Chỉ ra **từng lỗi** trong hai đoạn code trên. Với mỗi lỗi, giải thích ngắn: **kẻ tấn công lợi dụng được điều gì?**
-2. Trong các lỗi đó, lỗi nào **nghiêm trọng nhất**? Với lỗi đó, mô tả các bước một kẻ tấn công cần làm để **giả mạo tài khoản Administrator** và tự duyệt yêu cầu đặt phòng của mình.
-3. Viết lại **cả hai đoạn** cho đúng.
-
----
-
 ## Hướng dẫn nộp bài
 
 ### Cấu trúc bài nộp
